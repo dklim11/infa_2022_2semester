@@ -4,6 +4,9 @@
 
 using namespace std;
 
+mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
+uniform_int_distribution<int> dist(0, 3);
+
 bool check(int (&array)[40], int j) {
 	bool flag = false;
 	if (array[j - 1] == 1 || array[j - 1] == 2) {
@@ -19,8 +22,6 @@ bool check(int (&array)[40], int j) {
 void move(int (&array)[40], int size) {
 	int movement[size] = {0};
 	int direction;
-	mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
-	uniform_int_distribution<int> dist(0, 1);
 	
 	for (int j = 0; j < size; j++) {
 		if (array[j] == 1 && movement[j] == 0) {
@@ -75,7 +76,7 @@ int main() {
 	uniform_int_distribution<int> dist(0, 1);
 	
 	for (int j = 0; j < size; j++) {
-		array[j] = dist(rng);
+		array[j] = dist(rng)%2;
 		if (array[j] == 1) {
 			quantity++;
 		}

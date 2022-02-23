@@ -4,14 +4,10 @@
 
 using namespace std;
 
-int random(int bound) {
-	mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
-	uniform_int_distribution<int> dist(0, bound);
-	
-	return dist(rng);
-}
+mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
+uniform_int_distribution<int> dist(0, 3);
 
-bool check(int (&array)[10][10], int i, int j) {
+bool check(int (&array)[25][25], int i, int j) {
 	bool flag = false;
 	if (array[i - 1][j] == 1 || array[i - 1][j] == 2) {
 		flag = true;
@@ -29,13 +25,15 @@ bool check(int (&array)[10][10], int i, int j) {
 	return flag;
 }
 
-void move(int (&array)[10][10], int size) {
+void move(int (&array)[25][25], int size) {
 	int movement[size][size] = {0};
+	
 	int direction;
+	
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			if (array[i][j] == 1 && movement[i][j] == 0) {
-				direction = random(3);
+				direction = dist(rng);
 				if (direction == 0) {
 					if (array[i - 1][j] == 0) {
 						array[i - 1][j] = 1;
@@ -66,7 +64,7 @@ void move(int (&array)[10][10], int size) {
 	}
 }
 
-void step(int (&array)[10][10], int size, int &quantity) {
+void step(int (&array)[25][25], int size, int &quantity) {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			if (array[i][j] == 1 && (i == 0 || i == size - 1 || j == 0 || j == size - 1)) {
@@ -84,7 +82,7 @@ void step(int (&array)[10][10], int size, int &quantity) {
 	move(array, size);
 }
 
-void print(int (&a)[10][10], int size) {
+void print(int (&a)[25][25], int size) {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			cout << a[i][j] << " ";
@@ -94,32 +92,32 @@ void print(int (&a)[10][10], int size) {
 }
 
 int main() {
-	const int size = 10;
+	const int size = 25;
+	int result[2000];
 	
-	int array[size][size] = {0};
-	int quantity = 0; 
+	int j = 0, count;
+	while (j < 2000) {
+		int array[size][size] = {0};
+		int quantity = 0; 
 	
-	array[size/2][size/2] = 1;	    
-	quantity++;
-	/*
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			array[i][j] = random(1);
-			if (array[i][j] == 1) {
-				quantity++;
-			}
+		array[size/2][size/2] = 1;	    
+		quantity++;
+		count = 0;
+		while (quantity > 0) {
+			step(array, size, quantity);
+			count++;
+			//cout << quantity << endl;
 		}
-	}
-	*/
-	print(array, size);
-	int count = 0;
-	while (quantity > 0) {
-		step(array, size, quantity);
-		count++;
-		//cout << quantity << endl;
+		count--;
+		result[j] = count;
+		j++;
 	}
 	
-	cout << count << endl;
-	print(array, size);
+	double sum = 0;
+	for (int k = 0; k < 2000; k++) {
+		sum += result[k];
+	}
+	
+	cout << sum/2000 << endl;
 	return 0;
 }
