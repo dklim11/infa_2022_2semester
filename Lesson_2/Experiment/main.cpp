@@ -4,10 +4,12 @@
 
 using namespace std;
 
+const int size = 50;
+
 mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
 uniform_int_distribution<int> dist(0, 3);
 
-bool check(int (&array)[25][25], int i, int j) {
+bool check(int (&array)[size][size], int i, int j) {
 	bool flag = false;
 	if (array[i - 1][j] == 1 || array[i - 1][j] == 2) {
 		flag = true;
@@ -25,7 +27,7 @@ bool check(int (&array)[25][25], int i, int j) {
 	return flag;
 }
 
-void move(int (&array)[25][25], int size) {
+void move(int (&array)[size][size], int size) {
 	int movement[size][size] = {0};
 	
 	int direction;
@@ -64,7 +66,7 @@ void move(int (&array)[25][25], int size) {
 	}
 }
 
-void step(int (&array)[25][25], int size, int &quantity) {
+void step(int (&array)[size][size], int size, int &quantity) {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			if (array[i][j] == 1 && (i == 0 || i == size - 1 || j == 0 || j == size - 1)) {
@@ -82,7 +84,7 @@ void step(int (&array)[25][25], int size, int &quantity) {
 	move(array, size);
 }
 
-void print(int (&a)[25][25], int size) {
+void print(int (&a)[size][size], int size) {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			cout << a[i][j] << " ";
@@ -92,11 +94,10 @@ void print(int (&a)[25][25], int size) {
 }
 
 int main() {
-	const int size = 25;
-	int result[2000];
+	int result[3000];
 	
 	int j = 0, count;
-	while (j < 2000) {
+	while (j < 3000) {
 		int array[size][size] = {0};
 		int quantity = 0; 
 	
@@ -114,10 +115,10 @@ int main() {
 	}
 	
 	double sum = 0;
-	for (int k = 0; k < 2000; k++) {
+	for (int k = 0; k < 3000; k++) {
 		sum += result[k];
 	}
 	
-	cout << sum/2000 << endl;
+	cout << sum/3000 << endl;
 	return 0;
 }
