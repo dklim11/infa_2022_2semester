@@ -1,97 +1,126 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <cmath>
 
 using namespace std;
 
-mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
-uniform_int_distribution<int> dist(0, 3);
+const int size = 10;
 
-bool check(int (&array)[40], int j) {
+mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
+uniform_int_distribution<int> dist(0, size);
+
+bool check(int (&array)[size], int i) {
 	bool flag = false;
-	if (array[j - 1] == 1 || array[j - 1] == 2) {
+	if (array[i - 1] == 1 || array[i - 1] == 2) {
 		flag = true;
 	}
-	if (array[j + 1] == 1 || array[j + 1] == 2) {
+	if (array[i + 1] == 1 || array[i + 1] == 2) {
 		flag = true;
 	}
 	
 	return flag;
 }
 
-void move(int (&array)[40], int size) {
+void move(int (&array)[size], int size) {
 	int movement[size] = {0};
 	int direction;
-	
-	for (int j = 0; j < size; j++) {
-		if (array[j] == 1 && movement[j] == 0) {
-			direction = dist(rng);
+
+	for (int i = 0; i < size; i++) {
+		if (array[i] == 1 && movement[i] == 0) {
+			direction = dist(rng) % 2;
 			if (direction == 0) {
-				if (array[j - 1] == 0) {
-					array[j - 1] = 1;
-					movement[j - 1] = 1;
-					array[j] = 0;
+				if (array[i - 1] == 0) {
+					array[i - 1] = 1;
+					movement[i - 1] = 1;
+					array[i] = 0;
 				}
-			} else if (direction == 1) {
-				if (array[j + 1] == 0) {
-					array[j + 1] = 1;
-					movement[j + 1] = 1;
-					array[j] = 0;
+			} else {
+				if (array[i + 1] == 0) {
+					array[i + 1] = 1;
+					movement[i + 1] = 1;
+					array[i] = 0;
 				}
 			}
 		}
 	}
 }
 
-void step(int (&array)[40], int size, int &quantity) {
-	for (int j = 0; j < size; j++) {
-		if (array[j] == 1 && (j == 0 || j == size - 1)) {
-			array[j] = 2;
-			quantity -= 1;
-		} else if (array[j] == 1) {
-			if (check(array, j)) {
-				array[j] = 2;
-				quantity -= 1;
-			}
+void step(int (&array)[size], int size, int &quantity) {
+	for (int i = 0; i < size; i++) {
+		if (array[i] == 1 && (i == 0 || i == size - 1)) {
+			array[i] = 2;
+			quantity--;
+		} else if (array[i] == 1) {
+			if (check(array, i)) {
+				array[i] = 2;
+				quantity--;
+ 			}
 		}
 	}
 	
 	move(array, size);
 }
 
-void print(int (&a)[40], int size) {
-	for (int j = 0; j < size; j++) {
-		cout << a[j] << " ";
+void print(int (&a)[size], int size) {
+	for (int i = 0; i < size; i++) {
+		cout << a[i] << " ";
 	}
 	cout << endl;
 }
 
 int main() {
-	const int size = 40;
+	int quantity, count;
+	double average = 0;
 	
-	int array[size] = {0};
-	int quantity = 0; 
-	
-	mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
-	uniform_int_distribution<int> dist(0, 1);
-	
-	for (int j = 0; j < size; j++) {
-		array[j] = dist(rng)%2;
-		if (array[j] == 1) {
-			quantity++;
+	for (int k = 1; k < 3000; k++) {
+		int array[size] = {0};
+		
+		array[(size-1)/2] = 1;
+		count = 0;
+		quantity = 1;
+		
+		while (quantity > 0) {
+			step(array, size, quantity);
+			count++;
 		}
+		
+		average = (average*(k - 1) + count)/k;
 	}
 	
-	double Area = (double)quantity/(size);
-	print(array, size);
-	int count = 0;
-	while (quantity > 0) {
-		//cout << quantity << endl;
-		step(array, size, quantity);
-		count++;
+	cout << "Average number of steps to the bound: " << average << endl;
+	
+	int quantity_st, coord;
+	average = 0;
+	//quantity_st is in percents
+	cin >> quantity_st;
+	
+	quantity_st = size*quantity_st/100;
+	double Area = (double)quantity_st/size;
+		
+	for (int k = 1; k < 3000; k++) {
+		int	array[size] = {0};
+		quantity = quantity_st; 
+		
+		while (quantity > 0) {
+			coord = dist(rng) % size;
+			if (array[coord] == 0) {
+				quantity--;
+				array[coord] = 1;
+			}
+		}
+		
+		quantity = quantity_st;
+		count = 0;
+		while (quantity > 0) {
+			step(array, size, quantity);
+			count++;
+		}
+		--count;
+		
+		average = (average * (k - 1) + count)/k;
 	}
 	
-	cout << count << " " << Area << endl;
-	print(array, size);
+	cout << "Average number of steps till stop: " << average << endl;
 	return 0;
 }
