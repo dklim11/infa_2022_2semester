@@ -94,7 +94,8 @@ void print(int (&a)[size][size], int size) {
 }
 
 int main() {
-	int quantity_st, coord1, coord2, average = 0;
+	int quantity_st, coord1, coord2;
+	double average = 0;
 	//quantity_st is in percents
 	cin >> quantity_st;
 	
@@ -102,7 +103,7 @@ int main() {
 	double Area = (double)quantity_st/(size*size);
 	
 	int quantity;	
-	for (int k = 1; k < 100; k++) {
+	for (int k = 1; k < 2000; k++) {
 		int	array[size][size] = {0};
 		quantity = quantity_st; 
 		

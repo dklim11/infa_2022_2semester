@@ -31,10 +31,16 @@ plt.show()
 """
 2)
 """
-X = [0.45, 0.46, 0.47, 0.48, 0.49, 0.50, 0.51, 0.52, 0.53, 0.54]
-Y = [6.36, 5.69, 5.22, 4.87, 4.63, 4.39, 4.18, 4.03, 3.46, 3]
+X = np.linspace(5, 100, 20)
+Y = [148, 65, 37, 24, 17, 12, 9, 6, 5, 4, 3, 2, 1, 1, 1, 0, 0, 0, 0, 0]
 
-plt.title('Steps as function of Area')
+"""
+Bound is equal to 83 percents(after this point 0 steps are necessary)
+If average number of steps is double, than bound is around 86.(???)
+"""
+plt.title('Steps as function of area-percentage')
+plt.xlabel(r'percentage')
+plt.ylabel(r'Steps till the stop')
 plt.plot(X, Y)
 plt.show()
 
