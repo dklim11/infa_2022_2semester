@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const int size = 10;
+const int size = 1001;
 
 mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
 uniform_int_distribution<int> dist(0, size);
@@ -73,7 +73,8 @@ int main() {
 	int quantity, count;
 	double average = 0;
 	
-	for (int k = 1; k < 3000; k++) {
+	/*
+	for (int k = 1; k < 6000; k++) {
 		int array[size] = {0};
 		
 		array[(size-1)/2] = 1;
@@ -89,6 +90,7 @@ int main() {
 	}
 	
 	cout << "Average number of steps to the bound: " << average << endl;
+	*/
 	
 	int quantity_st, coord;
 	average = 0;
@@ -101,6 +103,10 @@ int main() {
 	for (int k = 1; k < 3000; k++) {
 		int	array[size] = {0};
 		quantity = quantity_st; 
+		
+		if (k % 100 == 0) {
+			cout << k << endl;
+		}
 		
 		while (quantity > 0) {
 			coord = dist(rng) % size;
@@ -122,5 +128,6 @@ int main() {
 	}
 	
 	cout << "Average number of steps till stop: " << average << endl;
+	
 	return 0;
 }
