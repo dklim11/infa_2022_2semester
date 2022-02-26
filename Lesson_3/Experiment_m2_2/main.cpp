@@ -29,40 +29,37 @@ bool check(int (&array)[size][size], int i, int j) {
 }
 
 void move(int (&array)[size][size], int size, int &possibility) {
-	int chance = dist(rng) % 100;
+	int movement[size][size] = {0};
+	int direction, chance;
 	
-	if (chance >= possibility) {
-		int movement[size][size] = {0};
-		int direction;
-		
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (array[i][j] == 1 && movement[i][j] == 0) {
-					direction = dist(rng) % 4;
-					if (direction == 0) {
-						if (array[i - 1][j] == 0) {
-							array[i - 1][j] = 1;
-							movement[i - 1][j] = 1;
-							array[i][j] = 0;
-						}
-					} else if (direction == 1) {
-						if (array[i][j - 1] == 0) {
-							array[i][j - 1] = 1;
-							movement[i][j - 1] = 1;
-							array[i][j] = 0;
-						}
-					} else if (direction == 2) {
-						if (array[i + 1][j] == 0) {
-							array[i + 1][j] = 1;
-							movement[i + 1][j] = 1;
-							array[i][j] = 0;
-						}
-					} else {
-						if (array[i][j + 1] == 0) {
-							array[i][j + 1] = 1;
-							movement[i][j + 1] = 1;
-							array[i][j] = 0;
-						}
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			chance = dist(rng) % 100;
+			if (array[i][j] == 1 && movement[i][j] == 0 && chance >= possibility) {
+				direction = dist(rng) % 4;
+				if (direction == 0) {
+					if (array[i - 1][j] == 0) {
+						array[i - 1][j] = 1;
+						movement[i - 1][j] = 1;
+						array[i][j] = 0;
+					}
+				} else if (direction == 1) {
+					if (array[i][j - 1] == 0) {
+						array[i][j - 1] = 1;
+						movement[i][j - 1] = 1;
+						array[i][j] = 0;
+					}
+				} else if (direction == 2) {
+					if (array[i + 1][j] == 0) {
+						array[i + 1][j] = 1;
+						movement[i + 1][j] = 1;
+						array[i][j] = 0;
+					}
+				} else {
+					if (array[i][j + 1] == 0) {
+						array[i][j + 1] = 1;
+						movement[i][j + 1] = 1;
+						array[i][j] = 0;
 					}
 				}
 			}

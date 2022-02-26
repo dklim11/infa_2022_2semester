@@ -23,26 +23,24 @@ bool check(int (&array)[size], int i) {
 }
 
 void move(int (&array)[size], int size, int &possibility) {
-	int chance = dist(rng) % 100;
-	if (chance >= possibility) {
-		int movement[size] = {0};
-		int direction;
+	int movement[size] = {0};
+	int direction, chance;
 	
-		for (int i = 0; i < size; i++) {
-			if (array[i] == 1 && movement[i] == 0) {
-				direction = dist(rng) % 2;
-				if (direction == 0) {
-					if (array[i - 1] == 0) {
-						array[i - 1] = 1;
-						movement[i - 1] = 1;
-						array[i] = 0;
-					}
-				} else {
-					if (array[i + 1] == 0) {
-						array[i + 1] = 1;
-						movement[i + 1] = 1;
-						array[i] = 0;
-					}
+	for (int i = 0; i < size; i++) {
+		int chance = dist(rng) % 100;
+		if (array[i] == 1 && movement[i] == 0 && chance >= possibility) {
+			direction = dist(rng) % 2;
+			if (direction == 0) {
+				if (array[i - 1] == 0) {
+					array[i - 1] = 1;
+					movement[i - 1] = 1;
+					array[i] = 0;
+				}
+			} else {
+				if (array[i + 1] == 0) {
+					array[i + 1] = 1;
+					movement[i + 1] = 1;
+					array[i] = 0;
 				}
 			}
 		}
