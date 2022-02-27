@@ -97,9 +97,7 @@ int main() {
 	//quantity_st is in percents
 	cin >> quantity_st;
 	
-	quantity_st = size*quantity_st/100;
-	double Area = (double)quantity_st/size;
-		
+	quantity_st = size*quantity_st/100;	
 	for (int k = 1; k < 3000; k++) {
 		int	array[size] = {0};
 		quantity = quantity_st; 

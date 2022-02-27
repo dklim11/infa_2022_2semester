@@ -100,8 +100,6 @@ int main() {
 	cin >> quantity_st;
 	
 	quantity_st = (size*size)*quantity_st/100;
-	double Area = (double)quantity_st/(size*size);
-	
 	int quantity;	
 	for (int k = 1; k < 2000; k++) {
 		int	array[size][size] = {0};
