@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const int size = 101;
+const int size = 21;
 
 mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
 uniform_int_distribution<int> dist(0, max(size, 100));
@@ -29,13 +29,12 @@ bool check(int (&array)[size][size], int i, int j) {
 }
 
 void move_1(int (&array)[size][size], int size, int &possibility) {
-	int chance = dist(rng) % 100;
-	
 	int movement[size][size] = {0};
-	int direction;
+	int direction, chance;
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (array[i][j] == 1 && movement[i][j] == 0) {
+			chance = dist(rng) % 100;
+			if (array[i][j] == 1 && movement[i][j] == 0 && chance >= possibility) {
 				direction = dist(rng) % 4;
 				if (direction == 0) {
 					if (array[i - 1][j] == 0) {
@@ -67,39 +66,36 @@ void move_1(int (&array)[size][size], int size, int &possibility) {
 	}
 }
 
-void move_2(int (&array)[size][size], int size, int &possibility) {
-	int chance = dist(rng) % 100;
-	
-	int movement[size][size] = {0};
-	int direction;
+void move_2(int (&array)[size][size], int size, int &possibility) {	
+	int movement[size][size];
+	int direction, chance;
 	
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (array[i][j] == 1 && movement[i][j] == 0) {
-				direction = dist(rng) % 4;
-				if (direction == 0) {
-					if (array[i - 1][j] == 0) {
-						array[i - 1][j] = 1;
-						movement[i - 1][j] = 1;
-						array[i][j] = 0;
-					}
-				} else if (direction == 1) {
-					if (array[i][j - 1] == 0) {
-						array[i][j - 1] = 1;
-						movement[i][j - 1] = 1;
-						array[i][j] = 0;
-					}
-				} else if (direction == 2) {
-					if (array[i + 1][j] == 0) {
-						array[i + 1][j] = 1;
-						movement[i + 1][j] = 1;
-						array[i][j] = 0;
-					}
-				} else {
-					if (array[i][j + 1] == 0) {
-						array[i][j + 1] = 1;
-						movement[i][j + 1] = 1;
-						array[i][j] = 0;
+			movement[i][j] = array[i][j];
+		}
+	}
+	
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			if (movement[i][j] > 0) {
+				for(int k = 0; k < movement[i][j]; k++) {
+					chance = dist(rng) % 100;
+					if (chance >= possibility) {
+						direction = dist(rng) % 4;
+						if (direction == 0) {
+							array[i - 1][j]++;
+							array[i][j]--;
+						} else if (direction == 1) {
+							array[i][j - 1]++;
+							array[i][j]--;
+						} else if (direction == 2) {
+							array[i + 1][j]++;
+							array[i][j]--;
+						} else {
+							array[i][j + 1]++;
+							array[i][j]--;
+						}
 					}
 				}
 			}
@@ -128,9 +124,9 @@ void step_1(int (&array)[size][size], int size, int &quantity, int &possibility)
 void step_2(int (&array)[size][size], int size, int &quantity, int &possibility) {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (array[i][j] == 1 && (i == 0 || i == size - 1 || j == 0 || j == size - 1)) {
-				array[i][j] = 2;
-				quantity--;
+			if (array[i][j] > 0 && (i == 0 || i == size - 1 || j == 0 || j == size - 1)) {
+				quantity = quantity - array[i][j];
+				array[i][j] = 0;
 			}
 		}
 	}
@@ -147,9 +143,9 @@ void print(int (&a)[size][size], int size) {
 	}
 }
 
-int insertion(int array[size][size], int quantity_st) {
+void insertion(int (&array)[size][size], int quantity_st) {
 	int quantity, coord1, coord2;
-	quantity = quantity_st
+	quantity = quantity_st;
 	
 	while (quantity > 0) {
 		coord1 = dist(rng) % size;
@@ -159,20 +155,19 @@ int insertion(int array[size][size], int quantity_st) {
 			array[coord1][coord2] = 1;
 		}
 	}
-	
-	return array;
 }
 
 int main() {
-	int quantity_st_1, quantity_st_2, coord1, coord2, possibility;
+	int quantity_state_1, quantity_state_2, count;
+	int possibility_1, possibility_2;
 	double average = 0;
-	//quantity_st is in percents
+	
 	cout << "Input a percent of first-type dislocations in cristall: " << endl;
-	cin >> quantity_st_1;
+	cin >> quantity_state_1;
 	cout << endl;
 	
 	cout << "Input a percent of second-type dislocations in cristall: " << endl;
-	cin >> quantity_st_2;
+	cin >> quantity_state_2;
 	cout << endl;
 	
 	cout << "Input a possibility of first-type dislocation's freezing from 1 to 100: " << endl;
@@ -183,8 +178,8 @@ int main() {
 	cin >> possibility_2;
 	cout << endl;
 	
-	quantity_st = (size*size)*quantity_st/100;
-	double Area = (double)quantity_st/(size*size);
+	quantity_state_1 = (size*size)*quantity_state_1/100;
+	quantity_state_2 = (size*size)*quantity_state_2/100;
 	
 	//array_1 has a behaviour which is similar to previous model of dislocations.
 	//array_2 represents a new_type dislocations
@@ -193,18 +188,18 @@ int main() {
 		int	array_1[size][size] = {0};
 		int array_2[size][size] = {0};
 		
-		array_1 = insertion(array_1, quantity_st_1);
-		array_2 = insertion(array_2, quantity_st_2);
+		quantity_1 = quantity_state_1;
+		quantity_2 = quantity_state_2;
+		insertion(array_1, quantity_state_1);
+		insertion(array_2, quantity_state_2);
 		
-		quantity = quantity_st;
-		
-		int count = 0;
+		count = 0;
 		while (quantity_1 > 0 || quantity_2 > 0) {
 			if (quantity_1 > 0) {
-				step(array_1, size, quantity_1, possibility_1);
+				step_1(array_1, size, quantity_1, possibility_1);
 			}
 			if (quantity_2 > 0) {
-				step(array_2, size, quantity_2, possibility_2);	
+				step_2(array_2, size, quantity_2, possibility_2);	
 			}
 			count++;
 		}
