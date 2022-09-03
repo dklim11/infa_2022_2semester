@@ -10,7 +10,7 @@ For each N there was completed 10 experiments.
 
 N1 = [5, 9, 13, 17, 21, 25, 30, 35, 40, 50]
 Steps = [4.5, 18.5, 42, 74, 117, 169, 245, 342, 441, 705]
-
+N1 = [i*i for i in N1]
 plt.xlabel('Area')
 plt.ylabel('Number of steps')
 plt.title('Steps(Area)')
